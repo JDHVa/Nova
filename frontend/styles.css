@@ -1,0 +1,480 @@
+:root {
+    /* Colores de fondo */
+    --bg-void: #030810;
+    --bg-deep: #06101e;
+    --bg-card: #FFFFFF0D;
+    --bg-card-h: #0C1E3CEB;
+    --bg-input: #050F20E6;
+    
+    /* Colores para resaltar cosas */    
+    --cyan: #00d4f7;
+    --cyan-dim: #00D4F72E;
+    --cyan-glow: #00D4F759;
+    --purple: #a855f7;
+    --purple-dim: #A855F72E;
+    --green: #10e0a0;
+    --green-dim: #10E0A02E;
+    --amber: #f59e0b;
+    --red: #ef4444;
+
+    /* Colores de texto */
+    --txt-1: #dff2ff;
+    --txt-2: #7badc9;
+    --txt-3: #3d637e;
+
+    /* Bordes de las imagenes */
+    --border: #00D4F71A;
+    --border-h: #00D4F72E;
+    --r-sm: 10px;
+    --r-md: 16px;
+    --r-lg: 24px;
+    --r-xl: 36px;
+
+    /* Fuentes de uso */
+    --font-display: 'Exo 2', sans-serif;
+    --font-body: 'Nunito', sans-serif;
+    --case-out: cubic-bezier(0.25, 1, 0.5, 1);
+
+}
+/* Definicion  de terminos en caso de no saber para que son: 
+
+box-sizing: border-box hace que el padding y el border se incluyan dentro del ancho y alto total de un elemento, lo que facilita el diseño y evita problemas de desbordamiento. 
+
+margin: 0; elimina el margen predeterminado que los navegadores aplican a los elementos, lo que ayuda a mantener un diseño consistente, osea elimina el espacio entre los elementos y el borde del navegador.
+
+padding: 0; elimina el padding predeterminado que los navegadores aplican a los elementos, lo que ayuda a mantener un diseño consistente, osea elimina el espacio entre el contenido de un elemento y su borde.
+
+scroll-behavior: smooth; hace que el desplazamiento a anclas dentro de la página sea suave en lugar de instantáneo, lo que mejora la experiencia del usuario al navegar por la página.
+
+overflow-x: hidden; oculta cualquier contenido que se desborde horizontalmente.
+
+inset: 0; Sirve para no tener que poner top: 0; left: 0; right: 0; bottom: 0, esto hace que el elemnto ocupe toda la pantalla, es decir, se extienda desde el borde superior hasta el borde inferior y desde el borde izquierdo hasta el borde derecho del contenedor padre.
+*/
+
+/* Reseteo para que no se rompa la pagina */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0; 
+    padding: 0;
+}
+html{
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--bg-void);
+    color: var(--txt-1);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track{
+    background: var(--bg-void);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--cyan-dim);
+    border-radius: 4px;
+}
+
+/* Aqui esta la seccion de canvas */
+
+#canvas {
+    position: fixed; 
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.5;
+}
+
+/* Estilo de cuadricula en el fondo de la pagina web */
+
+body::before {
+  content:'';
+  position:fixed; 
+  inset:0;
+  background-image:
+    linear-gradient(rgba(0,212,247,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,247,0.025) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events:none;
+  z-index:0;
+}
+
+/* Wrapper, esto hace que las cosas estén centradas */
+
+#app {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Header */
+header {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:18px 32px;
+  backdrop-filter: blur(16px);
+  background: rgba(3,8,16,0.7);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Logos de la pagina chat */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.logo-icon {
+    width: 42px;
+    height: 42px;
+    background: linear-gradient(135deg, var(--cyan), var(--purple));
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 900;
+    color: #fff;
+    box-shadow: var(--cyan-glow);
+    animation: pulse-icon 3s ease-in-out infinite;
+}
+
+@keyframes pulse-icon {
+    0%, 100% {
+        box-shadow: 0 0 16px rgba(0,212,247,0.35);
+    }
+    50%     {
+        box-shadow: 0 0 36px rgba(0,212,247,0.65), 0 0 60px rgba(168,85,247,0.3); 
+    }
+}
+
+.logo-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+}
+
+.logo-name {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: 3px;
+    background: linear-gradient(90deg, var(--cyan), var(--purple));
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    -webkit-text-fill-color: transparent;
+}
+
+.logo-sub{
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--txt-3);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    -webkit-text-fill-color: var(--txt-2);
+}
+
+.status-dot {
+    width: 12px;
+    height: 12px;
+    background: var(--green);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--green);
+    animation: blink 2s ease-in-out infinite;
+}
+
+@keyframes blink {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.67;
+    }
+}
+
+/* Esta seccion es para los Navs */
+.tabs{
+    display: flex;
+    gap: 4px;
+    background: rgba(0,0,0,0.35);
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    padding: 4px;
+}
+
+.tab{
+    padding: 8px 22px;
+    border-radius: 50px;
+    border: none;
+    background: transparent;
+    color: var(--txt-2);
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 900;
+    cursor: pointer;
+    transition: all .25s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.tab.active{
+    background: linear-gradient(135deg, rgba(0,212,247,0.22), rgba(168,85,247,0.18));
+    color: var(--cyan);
+    box-shadow: inset 0 0 0 1px var(--cyan), inset 0 0 0 2px var(--cyan-dim);
+}
+
+.tab:hover:not(.active){
+    background: rgba(255,255,255,0.5);
+    color: var(--txt-1);
+}
+
+.tab-icon {
+    font-size: 16px;
+}
+
+/* Esta es la seccion para modificar a la parte de los idiomas para poder cambiar entre ingles y español */
+
+.lang {
+    display: flex;
+    align-items: center;
+    gap: 0px;
+    background: rgba(0,0,0,0.35);
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.lang-btn {
+    padding: 7px 16px;
+    font-family: var(--font-display);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--txt-3);
+    transition: all .2s;
+    user-select: none;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.lang-btn.active {
+    color: var(--cyan);
+    background: rgba(0,212,247,0.15);
+}
+
+.lang-sep{
+    color: var(--txt-3);
+    font-size: 12px;
+}
+
+/* Apartir de aqui siguen las secciones del proyectos estas son las secciones inicales*/
+
+.section {
+    display: none;
+    flex: 1;
+    padding: 28px 32px 40px;
+    animation: fadeUp 0.5s var(--case-out);
+}
+
+.section.active {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* Banner donde va la info inicial*/
+
+.hero{
+    background: linear-gradient(135deg, rgba(0,212,247,0.07) 0%,
+    rgba(168,85,247,0.07) 50%,
+    rgba(16,224,160,0.05) 100%);
+    border: 1px solid var(--border);
+    border-radius: var(--r-xl);
+    padding: 36px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero::before {
+    content: "";
+    position: absolute;
+    top: -80px;
+    right: -80px;
+    width: 320px;
+    height: 320px;
+    background: radial-gradient(circle, var(--cyan-dim), transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.hero-text h1{
+    font-family: var(--font-display);
+    font-size: 5vw;
+    letter-spacing: 1px;
+    line-height: 1.15;
+    margin-bottom: 10px;
+}
+
+.hero-text h1 span {
+    background: linear-gradient(90deg, var(--cyan), var(--purple));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.hero-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.hero-pulse {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: conic-gradient(var(--cyan), var(--green), var(--purple), var(--cyan));
+    display: grid;
+    place-items: center;
+    animation: spin-slow 8s linear infinite;
+    position: relative;
+}
+
+@keyframes spin-slow {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.hero-pulse-inner {
+    position: absolute;
+    inset: 4px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 30px;
+}
+
+.hero-label{
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--cyan);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+/* Seccion de Chat */
+
+.chat-layout {
+    display: grid;
+    grid-template-columns: 250px 1fr;   
+    flex: 1;
+    gap: 20px;
+    min-height: 0;
+    height: 100vh;
+}
+
+/* Peque;a mediaquerie para que sea responsive */
+@media(max-width:900px) {
+    .chat-layout{
+        grid-template-columns:1fr;height:auto;
+    }
+}
+
+.chat-main {
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    backdrop-filter: blur(12px);
+}
+
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-height: 0;
+}
+
+.chat-input-area {
+    padding: 16px 20px;
+    border-top: 1px solid var(--border);
+    background: var(--bg-input);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.budget-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.budget-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--txt-3);
+    white-space: nowrap;
+}
+.budget-input {
+  flex:1;
+  padding:7px 12px;
+  background:var(--bg-input);
+  border:1px solid var(--border);
+  border-radius:var(--r-sm);
+  color:var(--txt-1);
+  font-family:var(--font-body);
+  font-size:13px;
+  transition:border-color .2s;
+}
+.budget-input:focus { 
+    outline:none; 
+    border-color:var(--border-h); 
+}
