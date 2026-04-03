@@ -129,16 +129,19 @@
         </div>
 
         <div class="xray-layout">
-            <div class="upload-zone" id="upload-zone" onclick="tiggerUpload()" ondragover="onDragOver(event)" ondragleave="onDrageLeave(event)" ondrop="OnDrop(event)">
-                <img alt="X-Ray Preview" id="xray-preview"> 
+            <div class="upload-zone" id="upload-zone" onclick="triggerUpload()"
+            ondragover="onDragOver(event)"
+            ondragleave="onDragLeave(event)"
+            ondrop="onDrop(event)">
+            <img id="xray-preview" alt="X-ray preview">
                 <!-- Aqui se suben las imagenes por medio de JavaScript -->
             <div id="upload-placeholder">
                 <div class="upload-icon">📁</div>
                 <div class="upload-title" data-es="Arrastra y suelta una radiografía aquí" data-en="Drag and drop an X-Ray here">Arrastra y suelta una radiografía aquí</div>
+                <div class="upload-sub" data-es="o haz clic para seleccionar" data-en="or click to select">o haz clic para seleccionar</div>
                 <div class="upload-tag">JPG ~ PNG</div>
             </div>
-            </div>
-            <input type="file" id="file-input" accept="image/jpeg,image/png" onchange="handleFileSelect(event)">
+            <input type="file" id="file-input" accept="image/jpeg,image/png" onchange="onFileSelected(event)">
             <div class="upload-controls" id="upload-controls" style="margin-top: 16px; display: none;">
                 <button class="btn btn-primary" id="analyze-btn" onclick="analyzeXray()">
                     <span>🔍</span> 
