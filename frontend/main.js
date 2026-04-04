@@ -1,17 +1,11 @@
-/* ══════════════════════════════════════════════════════════════
-   NOVA — Frontend Logic
-══════════════════════════════════════════════════════════════ */
-const API = '';   // empty = relative to server; set to 'http://localhost:8000' if opening index.html directly
+const API = '';  
  
-/* ── State ─────────────────────────────────────────────────── */
 let lang      = 'es';
 let chatHistory = [];
 let currentFile = null;
 let sending    = false;
  
-/* ══════════════════════════════════════════════════════════════
-   PARTICLE CANVAS
-══════════════════════════════════════════════════════════════ */
+
 (function(){
   const canvas = document.getElementById('canvas');
   const ctx    = canvas.getContext('2d');
@@ -81,9 +75,7 @@ let sending    = false;
   draw();
 })();
  
-/* ══════════════════════════════════════════════════════════════
-   i18n
-══════════════════════════════════════════════════════════════ */
+
 const T = {
   welcome_es: `¡Hola! Soy **NOVA**, tu asistente médico con IA. 🩺
  
@@ -130,31 +122,45 @@ You can tell me your **budget** for tailored options. How can I help you today?`
  
 function t(key){ return T[`${key}_${lang}`] || T[`${key}_es`] || ''; }
  
-/* ══════════════════════════════════════════════════════════════
-   LANGUAGE
-══════════════════════════════════════════════════════════════ */
-function setLang(l){
-  lang = l;
-  document.documentElement.lang = l;
-  document.getElementById('btn-es').classList.toggle('active', l==='es');
-  document.getElementById('btn-en').classList.toggle('active', l==='en');
- 
-  // Update all [data-es] / [data-en] elements
-  document.querySelectorAll('[data-es]').forEach(el=>{
-    if(el.hasAttribute('data-placeholder-es')){
-      el.placeholder = el.getAttribute(`data-placeholder-${l}`);
-    } else {
-      el.textContent = el.getAttribute(`data-${l}`);
+
+function setLang(l) {
+    lang = l;
+    document.documentElement.lang = l;
+
+    // Actualizar botones
+    const btnEs = document.getElementById('btn-es');
+    const btnEn = document.getElementById('btn-en');
+    if(btnEs) btnEs.classList.toggle('active', l === 'es');
+    if(btnEn) btnEn.classList.toggle('active', l === 'en');
+
+    // Cambiar textos con data-es/en
+    document.querySelectorAll('[data-es]').forEach(el => {
+        const text = el.getAttribute(`data-${l}`);
+        if (text) el.innerText = text;
+    });
+
+    // Cambiar placeholders
+    document.querySelectorAll('[data-placeholder-es]').forEach(el => {
+        const ph = el.getAttribute(`data-placeholder-${l}`);
+        if (ph) el.placeholder = ph;
+    });
+
+    // IMPORTANTE: Solo renderiza el mensaje inicial si el chat está vacío
+    // para evitar que se duplique cada vez que cambias de idioma.
+    const chatBox = document.getElementById('chat-messages');
+    if (chatBox && chatBox.children.length <= 1) {
+        renderWelcomeMessage();
     }
-  });
-  document.querySelectorAll('[data-placeholder-es]').forEach(el=>{
-    el.placeholder = el.getAttribute(`data-placeholder-${l}`);
-  });
+}
+
+function renderWelcomeMessage() {
+    const chatBox = document.getElementById('chat-messages');
+    if (!chatBox) return;
+    chatBox.innerHTML = ''; // Limpia el mensaje anterior
+    addMessage('nova', t('welcome'));
 }
  
-/* ══════════════════════════════════════════════════════════════
-   TABS
-══════════════════════════════════════════════════════════════ */
+
 function switchTab(tab){
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
@@ -162,9 +168,7 @@ function switchTab(tab){
   document.getElementById(`tab-${tab}`).classList.add('active');
 }
  
-/* ══════════════════════════════════════════════════════════════
-   CHAT
-══════════════════════════════════════════════════════════════ */
+
 function formatMarkdown(text){
   return text
     .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
@@ -204,7 +208,6 @@ async function sendMessage(){
   addMessage('user', text);
   chatHistory.push({role:'user', content:text});
  
-  // Typing indicator
   const typingBubble = addMessage('nova','',true);
  
   try {
@@ -237,7 +240,6 @@ function handleKey(e){
     e.preventDefault();
     sendMessage();
   }
-  // Auto-resize textarea
   const ta = document.getElementById('msg-input');
   ta.style.height='52px';
   ta.style.height=Math.min(ta.scrollHeight,140)+'px';
@@ -247,10 +249,7 @@ function quickAsk(key){
   document.getElementById('msg-input').value = t(key);
   sendMessage();
 }
- 
-/* ══════════════════════════════════════════════════════════════
-   X-RAY UPLOAD
-══════════════════════════════════════════════════════════════ */
+
 function triggerUpload(){ document.getElementById('file-input').click(); }
  
 function onDragOver(e){
@@ -368,7 +367,6 @@ function renderResults(data){
       ${t('disclaimer')}
     </p>`;
  
-  // Animate bars
   requestAnimationFrame(()=>{
     el.querySelectorAll('.finding-bar').forEach(bar=>{
       setTimeout(()=>{bar.style.width=bar.dataset.w+'%';},50);
@@ -376,9 +374,7 @@ function renderResults(data){
   });
 }
  
-/* ══════════════════════════════════════════════════════════════
-   TOAST
-══════════════════════════════════════════════════════════════ */
+
 function showToast(msg, duration=3000){
   const t = document.getElementById('toast');
   t.textContent = msg;
@@ -386,12 +382,7 @@ function showToast(msg, duration=3000){
   setTimeout(()=>t.classList.remove('show'), duration);
 }
  
-/* ══════════════════════════════════════════════════════════════
-   INIT
-══════════════════════════════════════════════════════════════ */
-window.addEventListener('DOMContentLoaded',()=>{
-  // Welcome message
-  addMessage('nova', t('welcome'));
-  // Apply initial lang
-  setLang('es');
+window.addEventListener('DOMContentLoaded', () => {
+    // Primero establecemos el idioma, esto ya llamará a renderWelcomeMessage
+    setLang('es'); 
 });
