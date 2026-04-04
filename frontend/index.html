@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700;900&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body>
     <canvas id="canvas"></canvas>
@@ -18,18 +18,18 @@
             <div class="logo-icon">N</div>
             <div class="logo-text">
                 <span class="logo-name">Nova</span>
-                <span class="logo-sub" data-es="Asistente Medico Asistido con IA" data-en="Medical Assistant Assisted by AI""">Asistente Medico Asistido con IA</span>
+                <span class="logo-sub" data-es="Asistente Medico Asistido con IA" data-en="Medical Assistant Assisted by AI">Asistente Medico Asistido con IA</span>
             </div>
             <div class="status-dot"></div>
         </div>
 
     <nav class="tabs">
         <button class="tab active" id="tab-chat" onclick="switchTab('chat')">
-            <span class="tab-icon">💬</span>
+            <span class="tab-icon"></span>
             <span data-es="Asistente" data-en="Assistant">Asistente</span>
         </button>
         <button class="tab" id="tab-xray" onclick="switchTab('xray')">
-            <span class="tab-icon">🩻</span>
+            <span class="tab-icon"></span>
             <span data-es="Rayos X" data-en="X-rays">Rayos X</span>
         </button>
     </nav>
@@ -48,13 +48,35 @@
             </div>
             <div class="hero-badge">
                 <div class="hero-pulse">
-                    <div class="hero-pulse-inner">🫀</div>
+                    <div class="hero-pulse-inner"></div>
                 </div>
                 <span class="hero-label">NOVA AI</span>
             </div>
         </div>
 
         <div class="chat-layout">
+            <aside class="chat-sidebar">
+                <div class="card">
+                    <div class="card-title" id="quick-title">Preguntas rápidas</div>
+                    <div id="quick-buttons-container"></div>    
+                    
+                </div>
+                <div class="card">
+                    <div class="card-title" data-es="Como funciona el asistente" data-en="How does the assistant work?">Como funciona el asistente</div>
+                    <div class="info-item">
+                        <span class="info-icon"></span>
+                        <span class="info-text" data-es="El asistente te ayuda a identificar posibles condiciones médicas basadas en los síntomas que describes." data-en="The assistant helps you identify possible medical conditions based on the symptoms you describe.">El asistente te ayuda a identificar posibles condiciones médicas basadas en los síntomas que describes.</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-icon"></span>
+                        <span class="info-text" data-es="Indica tu presupuesto para que el asistente te pueda decir que medicamente puedes tomar deacuerdo al dinero que dispones." data-en="Enter your budget to receive medication recommendations based on your financial constraints.">Indica tu presupuesto para que el asistente te pueda decir que medicamente puedes tomar deacuerdo al dinero que dispones.</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-icon"></span>
+                        <span class="info-text" data-es="NOVA, es un proyecto meramente informatico e informativo siempre consulta un medico." data-en="NOVA is a purely informational project. Always consult a doctor.">NOVA, es un proyecto meramente informatico e informativo siempre consulta un medico.</span>
+                    </div>
+                </div>
+            </aside>
             <div class="chat-main">
                 <div class="chat-messages" id="chat-messages">
                     <!-- Los mensajes se mostraran aqui, por medio de JavaScript -->
@@ -75,42 +97,6 @@
                     </div>
                 </div>
             </div>
-            <aside class="chat-sidebar">
-                <div class="card">
-                    <div class="card-title" data-es="Preguntas raidas" data-en="Quick Questions">
-                    </div>
-                    <button class="quick-btn" onclick="quickask('quick1')">
-                        <span> </span> <span data-es="Tengo fiebre o dolor de cabeza" data-en="I have fiver or headache">Tengo fiebre o dolor de cabeza</span>
-                    </button>
-                    <button class="quick-btn" onclick="quickask('quick2')">
-                        <span> </span> <span data-es="Me duele el pecho al respirar" data-en="My chest hurts when I breathe">Me duele el pecho al respirar</span>
-                    </button>
-                    <button class="quick-btn" onclick="quickask('quick3')">
-                        <span> </span> <span data-es="¿Que deberia de tomar para el dolor de garganta?" data-en="What should I take for a sore throat?">¿Que deberia de tomar para el dolor de garganta?</span>
-                    </button>
-                    <button class="quick-btn" onclick="quickask('quick4')">
-                        <span> </span> <span data-es="No puedo dormir bien" data-en="I can't sleep well">No puedo dormir bien</span>
-                    </button>
-                    <button class="quick-btn" onclick="quickask('quick5')">
-                        <span> </span> <span data-es="Me duelen los huesos del cuerpo" data-en="I have body aches">Me duelen los huesos del cuerpo</span>
-                    </button>
-                </div>
-                <div class="card">
-                    <div class="card-title" data-es="Como funciona el asistente" data-en="How does the assistant work?">Como funciona el asistente</div>
-                    <div class="info-item">
-                        <span class="info-icon"></span>
-                        <span class="info-text" data-es="El asistente te ayuda a identificar posibles condiciones médicas basadas en los síntomas que describes." data-en="The assistant helps you identify possible medical conditions based on the symptoms you describe.">El asistente te ayuda a identificar posibles condiciones médicas basadas en los síntomas que describes.</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-icon"></span>
-                        <span class="info-text" data-es="Indica tu presupuesto para que el asistente te pueda decir que medicamente puedes tomar deacuerdo al dinero que dispones." data-en="Enter your budget to receive medication recommendations based on your financial constraints.">Indica tu presupuesto para que el asistente te pueda decir que medicamente puedes tomar deacuerdo al dinero que dispones.</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-icon"></span>
-                        <span class="info-text" data-es="NOVA, es un proyecto meramente informatico e informativo siempre consulta un medico." data-en="NOVA is a purely informational project. Always consult a doctor.">NOVA, es un proyecto meramente informatico e informativo siempre consulta un medico.</span>
-                    </div>
-                </div>
-            </aside>
         </div>
     </section>
 
@@ -122,7 +108,7 @@
             </div>
             <div class="hero-badge">
                 <div class="hero-pulse">
-                    <div class="hero-pulse-inner">🩻</div>
+                    <div class="hero-pulse-inner"></div>
                 </div>
                 <span class="hero-label">CheXNet AI</span>
             </div>
@@ -136,7 +122,7 @@
             <img id="xray-preview" alt="X-ray preview">
                 <!-- Aqui se suben las imagenes por medio de JavaScript -->
             <div id="upload-placeholder">
-                <div class="upload-icon">📁</div>
+                <div class="upload-icon"></div>
                 <div class="upload-title" data-es="Arrastra y suelta una radiografía aquí" data-en="Drag and drop an X-Ray here">Arrastra y suelta una radiografía aquí</div>
                 <div class="upload-sub" data-es="o haz clic para seleccionar" data-en="or click to select">o haz clic para seleccionar</div>
                 <div class="upload-tag">JPG ~ PNG</div>
@@ -144,11 +130,11 @@
             <input type="file" id="file-input" accept="image/jpeg,image/png" onchange="onFileSelected(event)">
             <div class="upload-controls" id="upload-controls" style="margin-top: 16px; display: none;">
                 <button class="btn btn-primary" id="analyze-btn" onclick="analyzeXray()">
-                    <span>🔍</span> 
+                    <span></span> 
                     <span data-es="Analizar Radiografias" data-en="Analyze X-Rays">Analizar Radiografias</span>
                 </button>
                 <button class="btn btn-ghost" onclick="resetXray()">
-                    <span>↩</span> 
+                    <span></span> 
                     <span data-es="Nueva Imagen" data-en="New Image">Nueva Imagen</span>
                 </button>
             </div>
@@ -156,11 +142,11 @@
 
         <div class="results-panel" id="results-panel">
             <div class="results-empty" id="results-empty">
-                <div class="results-empty-icon">📊</div>
+                <div class="results-empty-icon"></div>
                 <div class="results-empty-text" data-es="Los resultados del analisis se mostraran aqui una vez que subas una radiografia" data-en="Analysis results will be displayed here once you upload an X-Ray">Los resultados del analisis se mostraran aqui una vez que subas una radiografia</div>
 
             </div>
-            <div class="results-content" style="display: none;">
+            <div id="results-content" style="display: none;">
                 <!-- Los resultados del analisis se mostraran aqui por medio de JavaScript asi que si quieres checarlo ve mjr a main.js -->
             </div>
         </div>
@@ -168,6 +154,6 @@
     </div>
 
     <div id="toast"></div>
-    <script src="main.js"></script>
+    <script src="/static/js/main.js"></script>
 </body>
 </html>
