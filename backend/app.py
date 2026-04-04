@@ -8,10 +8,9 @@ from pathlib import Path
 from dotenv import load_dotenv
 import os
 
-
 load_dotenv()
 
-app = FastAPI(title="NOVA Asistente Medico API", version="1.0.0")
+app = FastAPI(title="NOVA Medical Assistant API", version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -42,15 +41,15 @@ def get_xray_analyzer():
     return _xray_analyzer
 
 
-class HistorialMsgs(BaseModel):
-    role: str  # "user" | "model"
+class HistoryMessage(BaseModel):
+    role: str
     content: str
 
 
-class Chats(BaseModel):
+class ChatRequest(BaseModel):
     message: str
-    historial: List[HistorialMsgs] = []
-    lenguaje: str = "es"
+    history: List[HistoryMessage] = []
+    language: str = "es"
     budget: Optional[str] = None
 
 
@@ -61,53 +60,58 @@ async def health():
 
 @app.get("/api/ui-content")
 async def ui_content(lang: str = "es"):
+
     service = get_chat_service()
     return service.get_ui_content(lang)
 
 
 @app.post("/api/chat")
-async def chat(request: Chats):
+async def chat(request: ChatRequest):
     try:
         service = get_chat_service()
         response = await service.send_message(
             message=request.message,
-            historial=[m.dict() for m in request.historial],
-            lenguaje=request.lenguaje,
+            history=[m.dict() for m in request.history],
+            language=request.language,
             budget=request.budget,
         )
-        return {"response": response, "Exito": True}
+        return {"response": response, "success": True}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.post("/api/analyze-xray")
 async def analyze_xray(file: UploadFile = File(...)):
-    extensiones = (".jpg", ".jpeg", ".png")
+    valid_extensions = (".jpg", ".jpeg", ".png")
     filename = (file.filename or "").lower()
-    if not filename.endswith(extensiones):
-        raise HTTPException(400, "Por favor sube una imagen en .png, .jpeg, .jpg")
-
+    if not filename.endswith(valid_extensions):
+        raise HTTPException(
+            400,
+            "Por favor sube una imagen JPG o PNG / Please upload a JPG or PNG image",
+        )
     try:
-        contenido = await file.read()
+        contents = await file.read()
         analyzer = get_xray_analyzer()
-        resultado = analyzer.analyze(contenido)
-        return resultado
+        result = analyzer.analyze(contents)
+        return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 
-path_fronthend = Path(__file__).parent.parent / "frontend"
+frontend_path = Path(__file__).parent.parent / "frontend"
 
-if path_fronthend.exists():
-    app.mount("/static", StaticFiles(directory=str(path_fronthend)), name="static")
+if frontend_path.exists():
+    app.mount("/static", StaticFiles(directory=str(frontend_path)), name="static")
 
 
 @app.get("/")
 async def root():
-    index = path_fronthend / "index.html"
+    index = frontend_path / "index.html"
     if index.exists():
         return FileResponse(str(index))
-    return {"Mensaje": "La API si esta funcionando, ve a index.html alchillidog."}
+    return {
+        "message": "NOVA API si jala vete a index.html para que veas como funciona crack."
+    }
 
 
 if __name__ == "__main__":
