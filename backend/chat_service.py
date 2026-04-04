@@ -140,9 +140,9 @@ UI_CONTENT = {
 
 class ChatService:
     def __init__(self):
-        api_key = os.getenv("GEMINI_API_KEY")
+        api_key = os.getenv("gemini")
         if not api_key:
-            raise ValueError("GEMINI_API_KEY not found. Check your .env file.")
+            raise ValueError("gemini api key not found. Check your .env file.")
         genai.configure(api_key=api_key)
 
         self.model = genai.GenerativeModel(

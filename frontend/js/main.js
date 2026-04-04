@@ -1,15 +1,12 @@
-const API = '';  
-
+const API = '';
 
 let lang        = 'es';
-let ui          = {};       
-let uiCache     = {};        
+let ui          = {};
+let uiCache     = {};
 let chatHistory = [];
 let currentFile = null;
 let sending     = false;
- 
-
-(function(){
+let lastXrayData = null;   (function(){
   const canvas = document.getElementById('canvas');
   const ctx    = canvas.getContext('2d');
   let particles = [];
@@ -58,10 +55,10 @@ let sending     = false;
 async function fetchUIContent(language){
   if(uiCache[language]) return uiCache[language];
   try {
-    const res       = await fetch(`${API}/api/ui-content?lang=${language}`);
+    const res         = await fetch(`${API}/api/ui-content?lang=${language}`);
     uiCache[language] = await res.json();
   } catch(err){
-    console.warn(`Could not load UI content (${language}):`, err);
+    console.warn(`No se pudo cargar UI content (${language}):`, err);
     uiCache[language] = {};
   }
   return uiCache[language];
@@ -74,16 +71,14 @@ function applyUIContent(language){
   document.getElementById('btn-es').classList.toggle('active', language==='es');
   document.getElementById('btn-en').classList.toggle('active', language==='en');
  
-
   document.querySelectorAll('[data-es]').forEach(el => {
     if(el.tagName === 'INPUT' || el.tagName === 'TEXTAREA'){
       el.placeholder = el.getAttribute(`data-${language}`) || '';
     } else {
-      el.textContent = el.getAttribute(`data-${language}`) || '';
+      el.innerHTML = el.getAttribute(`data-${language}`) || '';
     }
   });
  
-
   if(ui.budget_placeholder)
     document.getElementById('budget-input').placeholder = ui.budget_placeholder;
   if(ui.input_placeholder)
@@ -101,13 +96,23 @@ function applyUIContent(language){
     btn.onclick   = () => quickAsk(q.prompt);
     container.appendChild(btn);
   });
+ 
+  const welcomeMsg = document.getElementById('welcome-msg');
+  if(welcomeMsg && ui.welcome){
+    welcomeMsg.querySelector('.msg-bubble').innerHTML = formatMarkdown(ui.welcome);
+  }
+ 
+  if(lastXrayData){
+    renderResults(lastXrayData);
+  }
 }
  
 function setLang(l){
   lang = l;
   applyUIContent(l);
 }
-
+ 
+ 
 function switchTab(tab){
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
@@ -115,7 +120,6 @@ function switchTab(tab){
   document.getElementById(`tab-${tab}`).classList.add('active');
 }
  
-
 function formatMarkdown(text){
   return text
     .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
@@ -123,10 +127,11 @@ function formatMarkdown(text){
     .replace(/\n/g,'<br>');
 }
  
-function addMessage(role, content, isTyping=false){
+function addMessage(role, content, isTyping=false, msgId=null){
   const box  = document.getElementById('chat-messages');
   const wrap = document.createElement('div');
   wrap.className = `msg ${role}`;
+  if(msgId) wrap.id = msgId;   
   wrap.innerHTML = `
     <div class="msg-avatar">${role==='user'?'👤':'🩺'}</div>
     <div class="msg-bubble">
@@ -157,13 +162,12 @@ async function sendMessage(){
   const typingBubble = addMessage('nova', '', true);
  
   try {
-
     const res = await fetch(`${API}/api/chat`, {
       method:  'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({
         message:  text,
-        history:  chatHistory.slice(0,-1),  
+        history:  chatHistory.slice(0,-1),
         language: lang,
         budget:   budget || null,
       }),
@@ -195,6 +199,7 @@ function quickAsk(prompt){
   sendMessage();
 }
  
+ 
 function triggerUpload(){ document.getElementById('file-input').click(); }
  
 function onDragOver(e){ e.preventDefault(); document.getElementById('upload-zone').classList.add('drag-over'); }
@@ -208,7 +213,7 @@ function onFileSelected(e){ const f=e.target.files[0]; if(f) loadFile(f); }
  
 function loadFile(file){
   if(!file.type.match(/image\/(jpeg|png)/)){
-    showToast('Solo JPG y PNG / Only JPG and PNG'); return;
+    showToast('⚠️ Solo JPG y PNG / Only JPG and PNG'); return;
   }
   currentFile = file;
   const reader = new FileReader();
@@ -223,7 +228,8 @@ function loadFile(file){
 }
  
 function resetXray(){
-  currentFile = null;
+  currentFile  = null;
+  lastXrayData = null;  
   document.getElementById('xray-preview').style.display='none';
   document.getElementById('xray-preview').src='';
   document.getElementById('upload-placeholder').style.display='';
@@ -262,7 +268,8 @@ async function analyzeXray(){
 }
  
 function renderResults(data){
-
+  lastXrayData = data;
+ 
   document.getElementById('results-empty').style.display='none';
   const el = document.getElementById('results-content');
   el.style.display='block';
@@ -272,7 +279,7 @@ function renderResults(data){
  
   el.innerHTML = `
     <div class="verdict-banner ${isNormal?'normal':'abnormal'}">
-      <div class="verdict-icon">${isNormal?'':''}</div>
+      <div class="verdict-icon">${isNormal?'✅':'⚠️'}</div>
       <div class="verdict-text">
         <h3>${isNormal ? ui.normal_title : ui.abnormal_title}</h3>
         <p>${isNormal ? ui.normal_sub   : ui.abnormal_sub}</p>
@@ -308,13 +315,14 @@ function renderResults(data){
   });
 }
  
-
+ 
 function showToast(msg, duration=3000){
   const el = document.getElementById('toast');
   el.textContent = msg; el.classList.add('show');
   setTimeout(()=>el.classList.remove('show'), duration);
 }
-
+ 
+ 
 window.addEventListener('DOMContentLoaded', async () => {
   await Promise.all([
     fetchUIContent('es'),
@@ -323,5 +331,6 @@ window.addEventListener('DOMContentLoaded', async () => {
  
   applyUIContent('es');
  
-  addMessage('nova', ui.welcome || '¡Hola! Soy NOVA. ¿En qué puedo ayudarte?');
-});
+  addMessage('nova', ui.welcome || '¡Hola! Soy NOVA. ¿En qué puedo ayudarte?', false, 'welcome-msg');
+  });
+ 

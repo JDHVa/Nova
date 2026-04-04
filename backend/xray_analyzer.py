@@ -84,9 +84,9 @@ descripciones = {
 
 def _severity(confidence: float) -> str:
     if confidence >= 0.60:
-        return "Critico"
+        return "critico"
     if confidence >= 0.35:
-        return "Moderado"
+        return "moderado"
     return "low"
 
 
