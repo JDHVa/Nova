@@ -10,7 +10,9 @@ import os
 
 load_dotenv()
 
-app = FastAPI(title="NOVA Medical Assistant API", version="1.0.0")
+# En caso de que no entiendan las lineas como quiera las voy a comentar por si acaso y no entienden (Disclaimer: Si no entiendes por que todo el codigo esta en ingles, es por que son palabras reservadas asi que es necesario hacerlo en ingles / If some of the lines cant be understan by you im going to cokmment all of it (Dislaimer: If you dont understan why is the code in english is becuase some words are neccesarry to write it in english)) Something else i want to
+
+app = FastAPI(title="API Del Proyecto NOVA", version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -19,26 +21,26 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-_chat_service = None
-_xray_analyzer = None
+chats = None
+xray = None
 
 
-def get_chat_service():
-    global _chat_service
-    if _chat_service is None:
+def getchats():
+    global chats
+    if chats is None:
         from chat_service import ChatService
 
-        _chat_service = ChatService()
-    return _chat_service
+        chats = ChatService()
+    return chats
 
 
-def get_xray_analyzer():
-    global _xray_analyzer
-    if _xray_analyzer is None:
+def getxray():
+    global xray
+    if xray is None:
         from xray_analyzer import XrayAnalyzer
 
-        _xray_analyzer = XrayAnalyzer()
-    return _xray_analyzer
+        xray = XrayAnalyzer()
+    return xray
 
 
 class HistoryMessage(BaseModel):
@@ -55,20 +57,20 @@ class ChatRequest(BaseModel):
 
 @app.get("/api/health")
 async def health():
-    return {"status": "ok", "service": "NOVA Medical Assistant"}
+    return {"status": "ok", "service": "Asistente Medico NOVA IA"}
 
 
 @app.get("/api/ui-content")
 async def ui_content(lang: str = "es"):
 
-    service = get_chat_service()
+    service = getchats()
     return service.get_ui_content(lang)
 
 
 @app.post("/api/chat")
 async def chat(request: ChatRequest):
     try:
-        service = get_chat_service()
+        service = getchats()
         response = await service.send_message(
             message=request.message,
             history=[m.dict() for m in request.history],
@@ -91,7 +93,7 @@ async def analyze_xray(file: UploadFile = File(...)):
         )
     try:
         contents = await file.read()
-        analyzer = get_xray_analyzer()
+        analyzer = getxray()
         result = analyzer.analyze(contents)
         return result
     except Exception as e:

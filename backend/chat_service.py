@@ -3,10 +3,9 @@ import asyncio
 from typing import List, Optional
 import google.generativeai as genai
 
-# ── Model name ─────────────────────────────────────────────────────────────────
-GEMINI_MODEL = "gemini-2.5-flash-preview-04-17"  # Gemini 2.5 Flash
+GEMINI_MODEL = "gemini-2.5-flash"
 
-# ── System prompts ─────────────────────────────────────────────────────────────
+""" La verdad es que los prompts los pedi en gemini, para que las ideas esten cerradas y sin errores / The truth is that the promts i ask to gemini for the ideas, because i really want to that the ideas was closed and without errors"""
 SYSTEM_PROMPT_ES = """Eres NOVA, un asistente médico de inteligencia artificial avanzado, empático y profesional.
 
 ROL:
@@ -51,7 +50,6 @@ IMPORTANT:
 • Use simple language; structure responses with lists when helpful
 • Always respond in English unless the user writes in Spanish"""
 
-# ── Static UI content served from Python (NOT hardcoded in JS) ─────────────────
 UI_CONTENT = {
     "es": {
         "welcome": (
@@ -65,22 +63,22 @@ UI_CONTENT = {
         ),
         "quick_questions": [
             {
-                "icon": "🤒",
+                "icon": "",
                 "label": "Fiebre y dolor de cabeza",
                 "prompt": "Tengo fiebre de 38°C y dolor de cabeza desde ayer. ¿Qué me recomiendas?",
             },
             {
-                "icon": "😮‍💨",
+                "icon": "",
                 "label": "Dolor de pecho al respirar",
                 "prompt": "Me duele el pecho cuando respiro profundo. ¿Qué puede ser y qué debo hacer?",
             },
             {
-                "icon": "💊",
+                "icon": "",
                 "label": "¿Qué tomar para la gripa?",
                 "prompt": "Tengo gripa con moco, estornudos y algo de fiebre. ¿Qué medicamento me recomiendas?",
             },
             {
-                "icon": "😴",
+                "icon": "",
                 "label": "No puedo dormir bien",
                 "prompt": "No puedo dormir bien, me desvelo y me levanto cansado. ¿Qué me ayudaría?",
             },
@@ -92,7 +90,7 @@ UI_CONTENT = {
         "normal_sub": "La radiografía no muestra anomalías detectables. Consulta a tu médico para una evaluación completa.",
         "abnormal_title": "Posibles hallazgos detectados",
         "abnormal_sub": "Se detectaron patrones que merecen atención médica. Consulta a un especialista.",
-        "disclaimer": "⚠️ Este análisis es orientativo. No reemplaza un diagnóstico médico profesional.",
+        "disclaimer": "Este análisis es orientativo. No reemplaza un diagnóstico médico profesional.",
         "findings_label": "Condiciones analizadas (top 8)",
     },
     "en": {
@@ -107,22 +105,22 @@ UI_CONTENT = {
         ),
         "quick_questions": [
             {
-                "icon": "🤒",
+                "icon": "",
                 "label": "Fever and headache",
                 "prompt": "I have a fever of 38°C (100.4°F) and headache since yesterday. What do you recommend?",
             },
             {
-                "icon": "😮‍💨",
+                "icon": "",
                 "label": "Chest pain when breathing",
                 "prompt": "My chest hurts when I breathe deeply. What could it be and what should I do?",
             },
             {
-                "icon": "💊",
+                "icon": "",
                 "label": "What to take for a cold?",
                 "prompt": "I have a cold with runny nose, sneezing and some fever. What medication do you recommend?",
             },
             {
-                "icon": "😴",
+                "icon": "",
                 "label": "I can't sleep well",
                 "prompt": "I can't sleep well, I'm restless and wake up tired. What would help me?",
             },
@@ -134,7 +132,7 @@ UI_CONTENT = {
         "normal_sub": "The X-ray shows no detectable anomalies. Consult your doctor for a full evaluation.",
         "abnormal_title": "Possible findings detected",
         "abnormal_sub": "Patterns were detected that warrant medical attention. Consult a specialist.",
-        "disclaimer": "⚠️ This analysis is for guidance only. It does not replace a professional medical diagnosis.",
+        "disclaimer": "This analysis is for guidance only. It does not replace a professional medical diagnosis.",
         "findings_label": "Analyzed conditions (top 8)",
     },
 }
