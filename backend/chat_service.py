@@ -2,6 +2,8 @@ import os
 import asyncio
 from typing import List, Optional
 import google.generativeai as genai
+import anthropic
+from groq import Groq
 
 GEMINI_MODEL = "gemini-2.5-flash"
 
@@ -138,20 +140,86 @@ UI_CONTENT = {
 }
 
 
+async def geminiii(messages, system_prompt, user_content):
+    api_key = os.getenv("gemini")
+    if not api_key:
+        raise ValueError("Api de gemini no hay")
+
+    genai.configure(api_key=api_key)
+    model = genai.GenerativeModel(
+        model_name=GEMINI_MODEL,
+        generation_config=genai.types.GenerationConfig(
+            temperature=0.7,
+            max_output_tokens=2048,
+        ),
+    )
+    gemini_history = []
+    for msg in messages[:-1]:
+        role = "user" if msg["role"] == "user" else "model"
+        gemini_history.append({"role": role, "parts": [{"text": msg["content"]}]})
+
+    if not gemini_history:
+        user_content = f"{system_prompt}\n\n---\n\n{user_content}"
+    chat = model.start_chat(history=gemini_history)
+    response = await asyncio.to_thread(chat.send_message, user_content)
+
+    return response.text
+
+
+async def claude(messages, system_prompt, user_content):
+    api_key = os.getenv("claude")
+    if not api_key:
+        raise ValueError("Antropic no tiene apikey")
+    client = anthropic.Anthropic(api_key=api_key)
+
+    claude_message = []
+    for msg in messages[:-1]:
+        role = "user" if msg["role"] == "user" else "assistant"
+        claude_message.append({"role": role, "content": msg["content"]})
+
+    claude_message.append({"role": "user", "content": user_content})
+
+    response = await asyncio.to_thread(
+        client.messages.create,
+        model="claude-haiku-4-5",
+        max_tokens=1024,
+        system=system_prompt,
+        messages=claude_message,
+    )
+    return response.content[0].text
+
+
+async def groq(messages, system_prompt, user_content):
+    api_key = os.getenv("groq")
+    if not api_key:
+        raise ValueError("No tienes api de groq")
+
+    client = Groq(api_key=api_key)
+
+    groq_message = [{"role": "system", "content": system_prompt}]
+
+    for msg in messages[:-1]:
+        role = "user" if msg["role"] == "user" else "assistant"
+        groq_message.append({"role": role, "content": msg["content"]})
+    groq_message.append({"role": "user", "content": user_content})
+
+    response = await asyncio.to_thread(
+        client.chat.completions.create,
+        model="llama-3.3-70b-versatile",
+        messages=groq_message,
+        max_tokens=1024,
+        temperature=0.7,
+    )
+    return response.choices[0].message.content
+
+
 class ChatService:
     def __init__(self):
-        api_key = os.getenv("gemini")
-        if not api_key:
-            raise ValueError("gemini api key not found. Check your .env file.")
-        genai.configure(api_key=api_key)
-
-        self.model = genai.GenerativeModel(
-            model_name=GEMINI_MODEL,
-            generation_config=genai.types.GenerationConfig(
-                temperature=0.7,
-                max_output_tokens=2048,
-            ),
-        )
+        self._providers = [
+            ("Gemini 2.5 Flash", geminiii),
+            ("Claude Haiku", claude),
+            ("Groq / Llama 3.3", groq),
+        ]
 
     def get_ui_content(self, language: str = "es") -> dict:
         return UI_CONTENT.get(language, UI_CONTENT["es"])
@@ -165,23 +233,28 @@ class ChatService:
     ) -> str:
         system_prompt = SYSTEM_PROMPT_ES if language == "es" else SYSTEM_PROMPT_EN
 
-        gemini_history = []
-        for msg in history:
-            role = "user" if msg["role"] == "user" else "model"
-            gemini_history.append({"role": role, "parts": [{"text": msg["content"]}]})
-
-        full_message = message
+        user_content = message
         if budget:
             tag = (
                 f"[Presupuesto del paciente: {budget}]"
                 if language == "es"
                 else f"[Patient budget: {budget}]"
             )
-            full_message = f"{tag}\n\n{message}"
+            user_content = f"{tag}\n\n{message}"
 
-        if not gemini_history:
-            full_message = f"{system_prompt}\n\n---\n\n{full_message}"
+        all_messages = history + [{"role": "user", "content": user_content}]
 
-        chat = self.model.start_chat(history=gemini_history)
-        response = await asyncio.to_thread(chat.send_message, full_message)
-        return response.text
+        last_error = None
+
+        for name, provider_fn in self._providers:
+            try:
+                print(f"Nova intento con {name}")
+                result = await provider_fn(all_messages, system_prompt, user_content)
+                print(f"Nova, si jalo con {name}")
+                return result
+            except Exception as e:
+                print(f"Nova, no jalo con {name}")
+
+                last_error = e
+                continue
+        raise Exception(f"Todos los modelos jalan si hubo errores fue aca {last_error}")
