@@ -874,40 +874,47 @@ header {
 }
  
 .verdict-banner {
-  display:flex; align-items:center; gap:14px;
-  padding:16px 20px;
-  border-radius:var(--r-md);
-  border:1px solid;
+    display:flex; align-items:center; gap:14px;
+    padding:16px 20px;
+    border-radius:var(--r-md);
+    border:1px solid;
 }
 .verdict-banner.normal {
-  background:var(--green-dim);
-  border-color:rgba(16,224,160,0.3);
+    background:var(--green-dim);
+    border-color:rgba(16,224,160,0.3);
 }
 .verdict-banner.abnormal {
-  background:rgba(245,158,11,0.1);
-  border-color:rgba(245,158,11,0.3);
+    background:rgba(245,158,11,0.1);
+    border-color:rgba(245,158,11,0.3);
 }
-.verdict-icon { font-size:28px; }
+.verdict-icon { 
+    font-size:28px; 
+
+}
 .verdict-text h3 {
-  font-family:var(--font-display);
-  font-size:15px; font-weight:700;
-  margin-bottom:3px;
+    font-family:var(--font-display);
+    font-size:15px; font-weight:700;
+    margin-bottom:3px;
 }
-.verdict-text p { font-size:13px; color:var(--txt-2); }
+.verdict-text p { 
+    font-size:13px; color:var(--txt-2); 
+}
  
 .findings-title {
-  font-family:var(--font-display);
-  font-size:11px; font-weight:700;
-  color:var(--cyan); letter-spacing:1.5px; text-transform:uppercase;
+    font-family:var(--font-display);
+    font-size:11px; font-weight:700;
+    color:var(--cyan); letter-spacing:1.5px; text-transform:uppercase;
 }
  
 .finding-item {
   margin-bottom:14px;
 }
-.finding-item:last-child { margin-bottom:0; }
+.finding-item:last-child {
+     margin-bottom:0; 
+    }
 .finding-header {
-  display:flex; justify-content:space-between; align-items:center;
-  margin-bottom:6px;
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:6px;
 }
 .finding-name {
   font-size:14px; font-weight:600;
@@ -916,28 +923,40 @@ header {
 .finding-dot {
   width:8px; height:8px; border-radius:50%; flex-shrink:0;
 }
-.finding-dot.critico { background:var(--red); box-shadow:0 0 8px var(--red); }
-.finding-dot.moderado { background:var(--amber); box-shadow:0 0 8px var(--amber); }
-.finding-dot.low      { background:var(--cyan); box-shadow:0 0 8px var(--cyan); }
+.finding-dot.critico { 
+    background:var(--red); box-shadow:0 0 8px var(--red); 
+}
+.finding-dot.moderado { 
+    background:var(--amber); box-shadow:0 0 8px var(--amber); 
+}
+.finding-dot.low      { 
+    background:var(--cyan); box-shadow:0 0 8px var(--cyan); 
+}
  
 .finding-pct {
-  font-family:var(--font-display);
-  font-size:13px; font-weight:700;
+    font-family:var(--font-display);
+    font-size:13px; font-weight:700;
 }
-.finding-pct.critico { color:var(--red); }
-.finding-pct.moderado { color:var(--amber); }
-.finding-pct.low      { color:var(--cyan); }
+.finding-pct.critico { 
+    color:var(--red); 
+}
+.finding-pct.moderado{ 
+    color:var(--amber);
+}
+.finding-pct.low { 
+    color:var(--cyan);
+}
  
 .finding-bar-track {
   height:5px;
-  background:rgba(255,255,255,0.06);
-  border-radius:50px;
-  overflow:hidden;
-}
+    background:rgba(255,255,255,0.06);
+    border-radius:50px;
+    overflow:hidden;
+    }
 .finding-bar {
-  height:100%;
-  border-radius:50px;
-  width:0%;
+    height:100%;
+    border-radius:50px;
+    width:0%;
   transition:width 1.2s var(--ease-out);
 }
 .finding-bar.critico { 
@@ -948,7 +967,7 @@ header {
     background:var(--amber); 
 }
 .finding-bar.low      { 
-    background:linear-gradient(90deg, var(--cyan), var(--green));
+    background: var(--green);
  }
  
 .finding-desc {

@@ -6,7 +6,9 @@ let uiCache     = {};
 let chatHistory = [];
 let currentFile = null;
 let sending     = false;
-let lastXrayData = null;   (function(){
+let lastXrayData = null;
+
+(function(){
   const canvas = document.getElementById('canvas');
   const ctx    = canvas.getContext('2d');
   let particles = [];
@@ -92,7 +94,7 @@ function applyUIContent(language){
   (ui.quick_questions || []).forEach(q => {
     const btn = document.createElement('button');
     btn.className = 'quick-btn';
-    btn.innerHTML = `<span>${q.icon}</span><span>${q.label}</span>`;
+    btn.innerHTML = `<span></span><span>${q.label}</span>`;
     btn.onclick   = () => quickAsk(q.prompt);
     container.appendChild(btn);
   });
@@ -111,7 +113,6 @@ function setLang(l){
   lang = l;
   applyUIContent(l);
 }
- 
  
 function switchTab(tab){
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
@@ -133,7 +134,7 @@ function addMessage(role, content, isTyping=false, msgId=null){
   wrap.className = `msg ${role}`;
   if(msgId) wrap.id = msgId;   
   wrap.innerHTML = `
-    <div class="msg-avatar">${role==='user'?'👤':'🩺'}</div>
+    <div class="msg-avatar"></div>
     <div class="msg-bubble">
       ${isTyping
         ? '<div class="typing-dots"><span></span><span></span><span></span></div>'
@@ -179,7 +180,7 @@ async function sendMessage(){
     chatHistory.push({role:'model', content:data.response});
  
   } catch(err){
-    typingBubble.innerHTML = `<span style="color:var(--red)">⚠️ ${err.message}</span>`;
+    typingBubble.innerHTML = `<span style="color:var(--red)"> ${err.message}</span>`;
   }
  
   sending = false;
@@ -199,7 +200,6 @@ function quickAsk(prompt){
   sendMessage();
 }
  
- 
 function triggerUpload(){ document.getElementById('file-input').click(); }
  
 function onDragOver(e){ e.preventDefault(); document.getElementById('upload-zone').classList.add('drag-over'); }
@@ -213,7 +213,7 @@ function onFileSelected(e){ const f=e.target.files[0]; if(f) loadFile(f); }
  
 function loadFile(file){
   if(!file.type.match(/image\/(jpeg|png)/)){
-    showToast('⚠️ Solo JPG y PNG / Only JPG and PNG'); return;
+    showToast('Solo JPG y PNG / Only JPG and PNG'); return;
   }
   currentFile = file;
   const reader = new FileReader();
@@ -260,11 +260,11 @@ async function analyzeXray(){
     renderResults(data);
   } catch(err){
     document.getElementById('results-empty').innerHTML =
-      `<div class="results-empty-icon">❌</div><div class="results-empty-text" style="color:var(--red)">${err.message}</div>`;
+      `<div class="results-empty-icon"></div><div class="results-empty-text" style="color:var(--red)">${err.message}</div>`;
   }
  
   btn.disabled = false;
-  btn.innerHTML = `<span>🔍</span> <span>${lang==='es'?'Analizar Radiografía':'Analyze X-Ray'}</span>`;
+  btn.innerHTML = `<span></span> <span>${lang==='es'?'Analizar Radiografía':'Analyze X-Ray'}</span>`;
 }
  
 function renderResults(data){
@@ -279,7 +279,7 @@ function renderResults(data){
  
   el.innerHTML = `
     <div class="verdict-banner ${isNormal?'normal':'abnormal'}">
-      <div class="verdict-icon">${isNormal?'✅':'⚠️'}</div>
+      <div class="verdict-icon"></div>
       <div class="verdict-text">
         <h3>${isNormal ? ui.normal_title : ui.abnormal_title}</h3>
         <p>${isNormal ? ui.normal_sub   : ui.abnormal_sub}</p>
@@ -315,13 +315,11 @@ function renderResults(data){
   });
 }
  
- 
 function showToast(msg, duration=3000){
   const el = document.getElementById('toast');
   el.textContent = msg; el.classList.add('show');
   setTimeout(()=>el.classList.remove('show'), duration);
 }
- 
  
 window.addEventListener('DOMContentLoaded', async () => {
   await Promise.all([
@@ -331,6 +329,5 @@ window.addEventListener('DOMContentLoaded', async () => {
  
   applyUIContent('es');
  
-  addMessage('nova', ui.welcome || '¡Hola! Soy NOVA. ¿En qué puedo ayudarte?', false, 'welcome-msg');
-  });
- 
+  addMessage('nova', ui.welcome || 'Hola! Soy NOVA. En qué puedo ayudarte?', false, 'welcome-msg');
+});
