@@ -55,7 +55,7 @@ IMPORTANT:
 UI_CONTENT = {
     "es": {
         "welcome": (
-            "¡Hola! Soy **NOVA**, tu asistente médico con IA. 🩺\n\n"
+            "¡Hola! Soy **NOVA**, tu asistente médico con IA. \n\n"
             "Estoy aquí para ayudarte con:\n"
             "• Información sobre síntomas y condiciones de salud\n"
             "• Recomendaciones de medicamentos (genéricos y de marca)\n"
@@ -97,7 +97,7 @@ UI_CONTENT = {
     },
     "en": {
         "welcome": (
-            "Hello! I'm **NOVA**, your AI medical assistant. 🩺\n\n"
+            "Hello! I'm **NOVA**, your AI medical assistant.\n\n"
             "I'm here to help you with:\n"
             "• Information about symptoms and health conditions\n"
             "• Medication recommendations (generic and brand-name)\n"
