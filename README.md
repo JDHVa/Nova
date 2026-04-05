@@ -2,10 +2,10 @@ NOVA:
 
 A LLM MedicChatBot, here you can ask anything if you have a disease or anyother kind of ailment, the feutures of the proyect are
 
-- -ChatBot potenced by Gemini, Claude and Grok
-- -An analyzer for x-ray's, made with the model DenseNet121 maden in PyTorch
-- -A public website that you can visit in this url: https://huggingface.co/spaces/JDHVa/NOVA
-- -IMPORTANT It's probably that if you want to use the website it might take like 2min-4min, because every 48h the website doesn't have anykind of request it unstart so  it's probably that you have to wait (If you are wondering about how is it even possible that a website use 3 or 5 minutes to launch, remember in this project we use PyTorch that is a Neuronal Network, and in the case that i using DenseNet121, this is a CNN so it's normal because think about it, the model have to train, have to test, and then it have to be launched in the website so that is the reason because it may take 3-5 minutes to launch)
+- ChatBot potenced by Gemini, Claude and Grok
+- An analyzer for x-ray's, made with the model DenseNet121 maden in PyTorch
+- A public website that you can visit in this url: https://huggingface.co/spaces/JDHVa/NOVA
+- IMPORTANT It's probably that if you want to use the website it might take like 2min-4min, because every 48h the website doesn't have anykind of request it unstart so  it's probably that you have to wait (If you are wondering about how is it even possible that a website use 3 or 5 minutes to launch, remember in this project we use PyTorch that is a Neuronal Network, and in the case that i using DenseNet121, this is a CNN so it's normal because think about it, the model have to train, have to test, and then it have to be launched in the website so that is the reason because it may take 3-5 minutes to launch)
 
 Cases of Use 
 
@@ -63,8 +63,11 @@ In that file you have to put your api key's in like this:
 
 - -groq=gsdfgs.... (YOUR GROQ API KEY Without "" only text)
 
+
 (Here is the link to have your own gemini key: https://aistudio.google.com/prompts/new_chat)
+
 (Here is the link to have your own claude key: https://platform.claude.com/dashboard)
+
 (Here is the link to have your own groq key: https://console.groq.com/home)
 
 Then i think that it's all if you want to try it by your own way
