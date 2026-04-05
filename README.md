@@ -39,7 +39,6 @@ AI:
 
 Give me an idea of what could be the design of the project, and give me the colors to use, also it helps with the particles i the website, and helps me with all the Dockerfile.
 
-
 Installation if you want to try in your own computer
 
 Hello, so first of all if you want to test the project in your own computer or maybe make changes to the code, you have to create your own venv, so here is the terminal code:
