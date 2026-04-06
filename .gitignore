@@ -1,2 +1,13 @@
 venv/
 backend/.env
+.env
+__pycache__/
+*.pyc
+*.pyo
+.Python
+*.egg-info/
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
